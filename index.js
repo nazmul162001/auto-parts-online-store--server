@@ -24,7 +24,14 @@ async function run(){
 
   try{
     await client.connect();
-    console.log('database connected');
+    const serviceCollection = client.db('auto_parts').collection('services');
+
+    app.get('/service', async(req,res)=> {
+      const query = {};
+      const cursor = serviceCollection.find(query);
+      services = await cursor.toArray();
+      res.send(services);
+    })
   }
   finally{
 
