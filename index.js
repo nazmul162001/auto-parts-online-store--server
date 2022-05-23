@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
@@ -25,13 +25,20 @@ async function run(){
   try{
     await client.connect();
     const serviceCollection = client.db('auto_parts').collection('services');
-
+    // api for get all services 
     app.get('/service', async(req,res)=> {
       const query = {};
       const cursor = serviceCollection.find(query);
       services = await cursor.toArray();
       res.send(services);
     })
+
+    // api for see single item info 
+    app.get('/service/:id', async(req,res) => {
+      const result = await serviceCollection.findOne({_id: ObjectId(req.params.id)});
+      res.send(result);
+    });
+
   }
   finally{
 
