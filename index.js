@@ -25,6 +25,8 @@ async function run(){
   try{
     await client.connect();
     const serviceCollection = client.db('auto_parts').collection('services');
+    // connection for user order
+    const orderCollection = client.db('auto_parts').collection('orders'); //post-steps(1)
     // api for get all services 
     app.get('/service', async(req,res)=> {
       const query = {};
@@ -38,6 +40,21 @@ async function run(){
       const result = await serviceCollection.findOne({_id: ObjectId(req.params.id)});
       res.send(result);
     });
+
+    // api for show specific user orders
+    app.get('/order', async(req,res)=> {
+      const email = req.query.email;
+      const query = {email: email}
+      const orders = await orderCollection.find(query).toArray();
+      res.send(orders)
+    })
+
+    // api for sent user orders data to database == //post-steps(2)
+    app.post('/order', async(req,res)=> {
+      const order = req.body;
+      const result = await orderCollection.insertOne(order);
+      res.send(result);
+    })
 
   }
   finally{
