@@ -44,6 +44,7 @@ async function run() {
     // connection for user order
     const orderCollection = client.db('auto_parts').collection('orders'); //post-steps(1)
     const userCollection = client.db('auto_parts').collection('users');
+    const paymentCollection = client.db('auto_parts').collection('payments');
 
     // api for insert all services data
     app.post('/service', async (req, res) => {
@@ -145,6 +146,22 @@ async function run() {
       } else {
         return res.status(403).send({ message: 'Forbidden Access' });
       }
+    });
+
+    // api for update payment info
+    app.patch('/order/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const payment = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          paid: true,
+          transactionId: payment.transactionId,
+        },
+      };
+      const result = await paymentCollection.insertOne(payment);
+      const updatedOrder = await orderCollection.updateOne(filter, updatedDoc);
+      res.send(updatedDoc);
     });
 
     // api for display data by id // for pay button click
