@@ -50,6 +50,12 @@ async function run() {
       res.send(services);
     });
 
+    // api for load all user into makeAdmin page
+    app.get('/user', verifyJWT, async (req, res) => {
+      const users = await userCollection.find().toArray();
+      res.send(users);
+    });
+
     // api for insert user login information to database
     app.put('/user/:email', async (req, res) => {
       const email = req.params.email;
