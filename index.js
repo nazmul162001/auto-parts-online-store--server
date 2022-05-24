@@ -42,7 +42,16 @@ async function run() {
     // connection for user order
     const orderCollection = client.db('auto_parts').collection('orders'); //post-steps(1)
     const userCollection = client.db('auto_parts').collection('users');
-    // api for get all services
+
+    // api for insert all services data
+    app.post('/service', async (req, res) => {
+      const product = req.body;
+      // console.log(product);
+      const result = await serviceCollection.insertOne(product);
+      res.send(result);
+    });
+
+    // api for get all services data
     app.get('/service', async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query);
