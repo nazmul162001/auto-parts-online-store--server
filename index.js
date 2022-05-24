@@ -49,7 +49,7 @@ async function run(){
       res.send(orders)
     })
 
-    // api for sent user orders data to database == //post-steps(2)
+    // api for insert user orders data to database == //post-steps(2)
     app.post('/order', async(req,res)=> {
       const order = req.body;
       const result = await orderCollection.insertOne(order);
