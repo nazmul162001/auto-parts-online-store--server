@@ -19,53 +19,61 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
-
-async function run(){
-
-  try{
+async function run() {
+  try {
     await client.connect();
     const serviceCollection = client.db('auto_parts').collection('services');
     // connection for user order
     const orderCollection = client.db('auto_parts').collection('orders'); //post-steps(1)
-    // api for get all services 
-    app.get('/service', async(req,res)=> {
+    const userCollection = client.db('auto_parts').collection('users');
+    // api for get all services
+    app.get('/service', async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query);
       services = await cursor.toArray();
       res.send(services);
-    })
+    });
 
-    // api for see single item info 
-    app.get('/service/:id', async(req,res) => {
-      const result = await serviceCollection.findOne({_id: ObjectId(req.params.id)});
+    // api for insert user login information to database
+    app.put('/user/:email', async (req, res) => {
+      const email = req.params.email;
+      const user = req.body;
+      const filter = { email: email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: user,
+      };
+      const result = await userCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    });
+
+    // api for see single item info
+    app.get('/service/:id', async (req, res) => {
+      const result = await serviceCollection.findOne({
+        _id: ObjectId(req.params.id),
+      });
       res.send(result);
     });
 
     // api for show specific user orders
-    app.get('/order', async(req,res)=> {
+    app.get('/order', async (req, res) => {
       const email = req.query.email;
-      const query = {email: email}
+      const query = { email: email };
       const orders = await orderCollection.find(query).toArray();
-      res.send(orders)
-    })
+      res.send(orders);
+    });
 
     // api for insert user orders data to database == //post-steps(2)
-    app.post('/order', async(req,res)=> {
+    app.post('/order', async (req, res) => {
       const order = req.body;
       const result = await orderCollection.insertOne(order);
       res.send(result);
-    })
-
+    });
+  } finally {
   }
-  finally{
-
-  }
-  
 }
 
-run().catch(console.dir)
-
-
+run().catch(console.dir);
 
 app.get('/', (req, res) => {
   res.send('Hello from Online Parts store!');
