@@ -43,6 +43,7 @@ async function run() {
     const serviceCollection = client.db('auto_parts').collection('services');
     // connection for user order
     const orderCollection = client.db('auto_parts').collection('orders'); //post-steps(1)
+    const reviewCollection = client.db('auto_parts').collection('reviews');
     const userCollection = client.db('auto_parts').collection('users');
     const paymentCollection = client.db('auto_parts').collection('payments');
 
@@ -170,6 +171,13 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const order = await orderCollection.findOne(query);
       res.send(order);
+    });
+
+    // api for insert user review to database
+    app.post('/review', async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
     });
 
     // api for insert user orders data to database == //post-steps(2)
