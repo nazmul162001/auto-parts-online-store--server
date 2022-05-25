@@ -149,6 +149,22 @@ async function run() {
       }
     });
 
+    // api for delete order
+    app.delete('/order/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await orderCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // api for delete order
+    app.delete('/service/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await serviceCollection.deleteOne(filter);
+      res.send(result);
+    });
+
     // api for update payment info
     app.patch('/order/:id', verifyJWT, async (req, res) => {
       const id = req.params.id;
