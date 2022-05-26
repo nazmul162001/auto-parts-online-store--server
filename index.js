@@ -125,7 +125,7 @@ async function run() {
     ///
 
     // api for load update user data
-    app.get("/user/:email", async (req, res) => {
+    app.get('/user/:email', async (req, res) => {
       const email = req.params.email;
       const user = await userCollection.findOne({
         email: email,
