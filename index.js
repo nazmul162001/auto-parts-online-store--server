@@ -70,7 +70,7 @@ async function run() {
     });
 
     // api for load all review
-    app.get('/review', async (req, res) => {
+    app.get('/review', verifyJWT, async (req, res) => {
       const review = await reviewCollection.find().toArray();
       res.send(review);
     });
