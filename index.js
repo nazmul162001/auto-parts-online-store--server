@@ -124,14 +124,14 @@ async function run() {
 
     ///
 
-    // api for load update user data
-    app.get('/user/:email', async (req, res) => {
-      const email = req.params.email;
-      const user = await userCollection.findOne({
-        email: email,
-      });
-      res.send(user);
-    });
+    // // api for load update user data
+    // app.get('/user/:email', async (req, res) => {
+    //   const email = req.params.email;
+    //   const user = await userCollection.findOne({
+    //     email: email,
+    //   });
+    //   res.send(user);
+    // });
 
     // api for payment
     app.post('/create-payment-intent', verifyJWT, async (req, res) => {
