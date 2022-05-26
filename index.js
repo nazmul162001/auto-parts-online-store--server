@@ -84,7 +84,7 @@ async function run() {
     });
 
     // api for user admin role
-    app.put('/user/admin/:email', async (req, res) => {
+    app.put('/user/admin/:email', verifyJWT, async (req, res) => {
       const email = req.params.email;
       // verify admin
       const requester = req.decoded.email;
@@ -150,6 +150,7 @@ async function run() {
     // api for insert user login information to database
     app.put('/user/:email', async (req, res) => {
       const email = req.params.email;
+      console.log(email);
       const user = req.body;
       const filter = { email: email };
       const options = { upsert: true };
