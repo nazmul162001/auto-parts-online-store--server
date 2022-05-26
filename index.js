@@ -104,7 +104,7 @@ async function run() {
     });
 
     ///
-    
+
     // api for update & store user profile data
     app.put('/user/:email', async (req, res) => {
       const email = req.params.email;
@@ -123,6 +123,15 @@ async function run() {
     });
 
     ///
+
+    // api for load update user data
+    app.get("/user/:email", async (req, res) => {
+      const email = req.params.email;
+      const user = await userCollection.findOne({
+        email: email,
+      });
+      res.send(user);
+    });
 
     // api for payment
     app.post('/create-payment-intent', verifyJWT, async (req, res) => {
