@@ -69,6 +69,12 @@ async function run() {
       res.send(users);
     });
 
+    // api for load all review
+    app.get('/review', async (req, res) => {
+      const review = await reviewCollection.find().toArray();
+      res.send(review);
+    });
+
     // api for admin route
     app.get('/admin/:email', verifyJWT, async (req, res) => {
       const email = req.params.email;
