@@ -107,6 +107,7 @@ async function run() {
         currency: 'usd',
         payment_method_types: ['card'],
       });
+      console.log(paymentIntent);
       res.send({ clientSecret: paymentIntent.client_secret });
     });
 
@@ -162,6 +163,13 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const result = await serviceCollection.deleteOne(filter);
+      res.send(result);
+    });
+    // api for delete user
+    app.delete('/admin/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await userCollection.deleteOne(filter);
       res.send(result);
     });
 
