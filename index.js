@@ -56,7 +56,7 @@ async function run() {
     });
 
     // api for get all services data
-    app.get('/service', verifyJWT, async (req, res) => {
+    app.get('/service', async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query);
       services = await cursor.toArray();
