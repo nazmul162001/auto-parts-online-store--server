@@ -83,7 +83,8 @@ async function run() {
       res.send({ admin: isAdmin });
     });
 
-    // api for user admin role
+
+    // api for user admin role//
     app.put('/user/admin/:email', verifyJWT, async (req, res) => {
       const email = req.params.email;
       // verify admin
