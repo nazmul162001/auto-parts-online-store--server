@@ -134,6 +134,18 @@ async function run() {
     //   res.send(user);
     // });
 
+    // api for getting all orders
+    app.get('/manage', async (req, res) => {
+        try{
+          const orders = await orderCollection.find().toArray();
+          res.send(orders);
+        }
+        catch(error){
+          res.send(error.message);
+        }
+    });
+
+
     // api for payment
     app.post('/create-payment-intent', verifyJWT, async (req, res) => {
       const service = req.body;
