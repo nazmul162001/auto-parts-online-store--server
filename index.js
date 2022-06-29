@@ -83,7 +83,6 @@ async function run() {
       res.send({ admin: isAdmin });
     });
 
-
     // api for user admin role//
     app.put('/user/admin/:email', verifyJWT, async (req, res) => {
       const email = req.params.email;
@@ -136,15 +135,35 @@ async function run() {
 
     // api for getting all orders
     app.get('/manage', async (req, res) => {
-        try{
-          const orders = await orderCollection.find().toArray();
-          res.send(orders);
-        }
-        catch(error){
-          res.send(error.message);
-        }
+      try {
+        const orders = await orderCollection.find().toArray();
+        res.send(orders);
+      } catch (error) {
+        res.send(error.message);
+      }
     });
 
+    // api for updating pending to shift
+    app.put('/manage/:id', async (req, res) => {
+      try {
+        const id = req.params.id;
+        // const updatedValue = req.body;
+        const filter = { _id: ObjectId(id)};
+        const options = { upsert: true };
+        const updateDoc = {
+          $set: {"status": req.body.status}
+        };
+        const result = await orderCollection.updateOne(
+          filter,
+          updateDoc,
+          options
+        );
+        res.send(result)
+      } catch (error) {
+        // console.log(error)
+        res.send(error);
+      }
+    });
 
     // api for payment
     app.post('/create-payment-intent', verifyJWT, async (req, res) => {
