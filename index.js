@@ -2,25 +2,30 @@ const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+// const dbConnect = require('./utils/dbConnect');
 require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+const servicesRoutes = require('./routes/services.route.js');
+
 //middleware
 app.use(cors());
 app.use(express.json());
+app.use('/service', servicesRoutes);
 
-// URI
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.nzql2.mongodb.net/?retryWrites=true&w=majority`;
+// dbConnect();
+    // URI
+    const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.nzql2.mongodb.net/?retryWrites=true&w=majority`;
 
-// Client
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverApi: ServerApiVersion.v1,
-});
+    // Client
+    const client = new MongoClient(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverApi: ServerApiVersion.v1,
+    });
 
 function verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -48,20 +53,20 @@ async function run() {
     const paymentCollection = client.db('auto_parts').collection('payments');
 
     // api for insert all services data
-    app.post('/service', async (req, res) => {
-      const product = req.body;
-      // console.log(product);
-      const result = await serviceCollection.insertOne(product);
-      res.send(result);
-    });
+    // app.post('/service', async (req, res) => {
+    //   const product = req.body;
+    //   // console.log(product);
+    //   const result = await serviceCollection.insertOne(product);
+    //   res.send(result);
+    // });
 
     // api for get all services data
-    app.get('/service', async (req, res) => {
-      const query = {};
-      const cursor = serviceCollection.find(query);
-      services = await cursor.toArray();
-      res.send(services);
-    });
+    // app.get('/service', async (req, res) => {
+    //   const query = {};
+    //   const cursor = serviceCollection.find(query);
+    //   services = await cursor.toArray();
+    //   res.send(services);
+    // });
 
     // api for load all user into makeAdmin page
     app.get('/user', verifyJWT, async (req, res) => {
@@ -148,17 +153,17 @@ async function run() {
       try {
         const id = req.params.id;
         // const updatedValue = req.body;
-        const filter = { _id: ObjectId(id)};
+        const filter = { _id: ObjectId(id) };
         const options = { upsert: true };
         const updateDoc = {
-          $set: {"status": req.body.status}
+          $set: { status: req.body.status },
         };
         const result = await orderCollection.updateOne(
           filter,
           updateDoc,
           options
         );
-        res.send(result)
+        res.send(result);
       } catch (error) {
         // console.log(error)
         res.send(error);
@@ -199,12 +204,12 @@ async function run() {
     });
 
     // api for see single item info
-    app.get('/service/:id', async (req, res) => {
-      const result = await serviceCollection.findOne({
-        _id: ObjectId(req.params.id),
-      });
-      res.send(result);
-    });
+    // app.get('/service/:id', async (req, res) => {
+    //   const result = await serviceCollection.findOne({
+    //     _id: ObjectId(req.params.id),
+    //   });
+    //   res.send(result);
+    // });
 
     // api for show specific user orders
     app.get('/order', verifyJWT, async (req, res) => {
@@ -228,12 +233,12 @@ async function run() {
     });
 
     // api for delete order
-    app.delete('/service/:id', async (req, res) => {
-      const id = req.params.id;
-      const filter = { _id: ObjectId(id) };
-      const result = await serviceCollection.deleteOne(filter);
-      res.send(result);
-    });
+    // app.delete('/service/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const filter = { _id: ObjectId(id) };
+    //   const result = await serviceCollection.deleteOne(filter);
+    //   res.send(result);
+    // });
     // api for delete user
     app.delete('/admin/:id', async (req, res) => {
       const id = req.params.id;
