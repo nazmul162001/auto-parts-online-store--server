@@ -26,4 +26,8 @@ router.delete('/:id', async (req, res) => {
   res.send(result);
 });
 
+// router.route("/").get((req,res)=> {
+  
+// })
+
 module.exports = router;
