@@ -51,6 +51,7 @@ async function run() {
     const reviewCollection = client.db("auto_parts").collection("reviews");
     const userCollection = client.db("auto_parts").collection("users");
     const paymentCollection = client.db("auto_parts").collection("payments");
+    const userProfileCollection = client.db("auto_parts").collection("profiles");
 
     // api for insert all services data
     app.post("/service", async (req, res) => {
@@ -277,6 +278,19 @@ async function run() {
       const result = await reviewCollection.insertOne(review);
       res.send(result);
     });
+
+    // api for update profile
+    app.post("/saveProfile", async (req, res) => {
+      const profile = req.body;
+      const result = await userProfileCollection.insertOne(profile);
+      res.send(result);
+    });
+
+    // get update user profile data 
+    app.get("/getUserProfile", async (req, res) => {
+      const result = await userProfileCollection.find({}).toArray();
+      res.send(result);
+    })
 
     // api for insert user orders data to database == //post-steps(2)
     app.post("/order", async (req, res) => {
